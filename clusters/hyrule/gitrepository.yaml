@@ -1,0 +1,11 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: hyrule-gitops
+  namespace: tenant-root
+spec:
+  url: https://github.com/Th3Link/cozystack-hyrule-gitops
+  ref:
+    branch: main
+  interval: 1m0s
+  timeout: 60s
