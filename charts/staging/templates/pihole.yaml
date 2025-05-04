@@ -1,9 +1,9 @@
-{{- range .Values.services.postgres }}
+{{- range .Values.services.pihole }}
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: postgres-{{ .name }}
+  name: pihole-{{ .name }}
   namespace: {{ $.Values.namespace }}
   labels:
     cozystack.io/ui: "true"
