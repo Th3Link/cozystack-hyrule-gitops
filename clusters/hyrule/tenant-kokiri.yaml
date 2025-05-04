@@ -27,8 +27,10 @@ spec:
     etcd: false
     controlPlane: false
     monitoring: false
-    ingress: false
-    host: ""
+    ingress: true
+    isolated: false
+    seaweedfs: false
+    host: "kokiri.hyrule"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -65,8 +67,6 @@ spec:
             enabled: true
           ingress:
             enabled: true
-            hosts:
-              - "pihole.hyrule"
           serviceWeb:
             loadBalancerIP: 192.168.178.201
             annotations:
@@ -77,8 +77,50 @@ spec:
             annotations:
               metallb.universe.tf/allow-shared-ip: pihole-svc
             type: LoadBalancer
+          podDnsConfig:
+            enabled: true
+            policy: "None"
+            nameservers:
+            - 127.0.0.1
+            - 8.8.8.8
           dnsmasq:
             customDnsEntries:
               - address=/dashboard.hyrule/192.168.178.200
               - address=/grafana.hyrule/192.168.178.200
               - address=/pihole.hyrule/192.168.178.201
+      kubernetes:
+      - name: service
+        # Here you can specify applications to deploy via FluxCD into tenant-cluster
+        #fluxSync:
+        #  values:
+        #    secret:
+        #      create: true
+        #      data:
+        #        password: token-string-here123
+        #        username: pat
+        #    gitRepository:
+        #      spec:
+        #        url: https://gitlab.com/example/infra.git
+        #        ref:
+        #          branch: main
+        #    kustomization:
+        #      spec:
+        #        path: clusters/tenant-example
+
+        values:
+          addons:
+            certManager:
+              enabled: true
+            fluxcd:
+              enabled: true
+            cilium:
+              enabled: true
+          controlPlane:
+            replicas: 2
+          nodeGroups:
+            md0:
+              maxReplicas: 2
+              minReplicas: 0
+              resources:
+                cpu: 2
+                memory: 4096Mi

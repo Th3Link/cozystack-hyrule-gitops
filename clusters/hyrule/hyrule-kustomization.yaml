@@ -1,0 +1,13 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kokiri-hyrule
+  namespace: tenant-root
+spec:
+  force: false
+  interval: 10m0s
+  path: ./clusters/hyrule
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: hyrule-gitops
